@@ -29,6 +29,18 @@ struct msg_get_arm_mem {
 	u32 end_tag;
 };
 
+struct msg_get_power_state {
+	struct bcm2835_mbox_hdr hdr;
+	struct bcm2835_mbox_tag_get_power_state get_power_state;
+	u32 end_tag;
+};
+
+struct msg_set_power_state {
+	struct bcm2835_mbox_hdr hdr;
+	struct bcm2835_mbox_tag_set_power_state set_power_state;
+	u32 end_tag;
+};
+
 struct msg_get_clock_rate {
 	struct bcm2835_mbox_hdr hdr;
 	struct bcm2835_mbox_tag_get_clock_rate get_clock_rate;
@@ -63,8 +75,33 @@ int board_init(void)
 
 int board_mmc_init(void)
 {
+#if 0
+	ALLOC_ALIGN_BUFFER(struct msg_set_power_state, msg_pwr, 1, 16);
+#endif
 	ALLOC_ALIGN_BUFFER(struct msg_get_clock_rate, msg_clk, 1, 16);
 	int ret;
+
+#if 0
+	/*
+	 * FIXME: The firmware gives an error reponse to set_power_state. See:
+	 * https://github.com/raspberrypi/firmware/issues/106
+	 */
+	BCM2835_MBOX_INIT_HDR(msg_pwr);
+	BCM2835_MBOX_INIT_TAG(&msg_pwr->set_power_state,
+				SET_POWER_STATE);
+	msg_pwr->set_power_state.body.req.device_id =
+		BCM2835_MBOX_POWER_DEVID_SDHCI;
+	msg_pwr->set_power_state.body.req.state =
+		BCM2835_MBOX_SET_POWER_STATE_REQ_ON |
+		BCM2835_MBOX_SET_POWER_STATE_REQ_WAIT;
+
+	ret = bcm2835_mbox_call_prop(BCM2835_MBOX_PROP_CHAN,
+					&msg_pwr->hdr);
+	if (ret) {
+		printf("bcm2835: Could not set SDHCI power state\n");
+		return -1;
+	}
+#endif
 
 	BCM2835_MBOX_INIT_HDR(msg_clk);
 	BCM2835_MBOX_INIT_TAG(&msg_clk->get_clock_rate, GET_CLOCK_RATE);
