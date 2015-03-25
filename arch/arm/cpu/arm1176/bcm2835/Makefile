@@ -6,3 +6,4 @@
 
 obj-y	:= lowlevel_init.o
 obj-y	+= init.o reset.o timer.o mbox.o
+obj-y	+= phys2bus.o

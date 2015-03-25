@@ -11,3 +11,4 @@ obj-y	+= $(src_dir)/init.o
 obj-y	+= $(src_dir)/reset.o
 obj-y	+= $(src_dir)/timer.o
 obj-y	+= $(src_dir)/mbox.o
+obj-y	+= $(src_dir)/phys2bus.o

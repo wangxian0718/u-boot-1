@@ -9,4 +9,7 @@ config DM_SERIAL
 config DM_GPIO
 	default y
 
+config PHYS_TO_BUS
+	default y
+
 endif
