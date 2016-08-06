@@ -113,9 +113,11 @@ fdt_addr_t fdtdec_get_addr_size_fixed(const void *blob, int node,
 		return FDT_ADDR_T_NONE;
 	}
 
+#if !defined(CONFIG_SPL_BUILD) && defined(CONFIG_OF_LIBFDT)
 	if (translate)
 		addr = fdt_translate_address(blob, node, prop_addr);
 	else
+#endif
 		addr = fdtdec_get_number(prop_addr, na);
 
 	if (sizep) {

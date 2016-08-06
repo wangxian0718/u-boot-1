@@ -1055,7 +1055,7 @@ static int of_bus_default_translate(fdt32_t *addr, u64 offset, int na)
 #ifdef CONFIG_OF_ISA_BUS
 
 /* ISA bus translator */
-static int of_bus_isa_match(void *blob, int parentoffset)
+static int of_bus_isa_match(const void *blob, int parentoffset)
 {
 	const char *name;
 
